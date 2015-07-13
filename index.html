@@ -52,7 +52,7 @@
 
       <div class="col-md-6">
       <div ng-repeat="result in chosentype|limitTo:6"  id="albumlist" ng-show ="testtype == 'album'" class="col-xs-6 img resultbox" ng-class="result.id == currentId ? 'listed' : ''">
-        <img src="{{result.images[1].url}}" ng-click="showalbumtracks(result.id)" ></img>
+        <img src="{{result.images[1].url}}" ng-click="showalbumtracks(result.id)" title="Click to show album's tracks"></img>
           <p>{{result.name}} </p>
        
       </div>
@@ -61,10 +61,9 @@
       
       <div class="col-md-6" id="tracklists" ng-show="tracklistshow">
         <p>Album's track(s) with the artist(s) followed. <br>
-          Click on a track name to hear sample.
         </p>
         <ol>
-          <li ng-repeat="x in albumtracks" ng-click="play(x.preview_url)" ng-class="x.preview_url == currentSong ? 'playing' : ''"  >
+          <li ng-repeat="x in albumtracks" ng-click="play(x.preview_url)" ng-class="x.preview_url == currentSong ? 'playing' : ''"  title="Click to play preview">
             <span class="listtracks">{{x.name}}</span> <span class="artistname">- {{x.artists[0].name}}</span>
           </li>
         </ol>
