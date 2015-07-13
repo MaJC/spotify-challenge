@@ -1,5 +1,115 @@
+@import url(http://fonts.googleapis.com/css?family=Droid+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:400,700);
+
+#intro {
+  font-size: 16px;
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-family: 'Titillium Web', 'Droid Sans' sans-serif;
+  font-weight: 700;
+}
+
+.albumname {
+  font-size: 11px;
+}
+
+.resultbox {
+  background-color: rgba(255, 243, 178, 0.4);
+}
+
+#typemenu {
+  border: 1px solid #ccc;
+  width: 268px;
+  border-radius: 4px;
+  padding: 5px;
+  background: transparent;
+}
+
+
+#dropdowndiv {
+  overflow: hidden;
+  background: url(new_arrow.jpg) no-repeat right #ddd;
+  width: 240px;
+  border-radius: 4px;
+}
+
+.hotpopular {
+  color: red;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.listtracks {
+  cursor: pointer;
+  cursor: hand;
+}
+
+.resultinfo {
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.artistname {
+  font-size: 14px;
+}
+
+.popularityinfo {
+  font-size: 10px;
+}
+
+li {
+  background: #efe2e6;
+}
+
+li:nth-child(even) {
+  background: white;
+
+}
+
+ol {
+  border: 1px solid #999999;
+  border-radius: 5px;
+  padding: 1em;
+  padding-left: 2.5em;
+}
+
+
+#artistlist img {
+  width: auto;
+  height: auto;
+
+}
+.listed {
+  background: #d7ecff;
+}
+
+#toptracklist {
+  font-size: 18px;
+}
+
+#tracklists {
+  font-size: 19px;
+}
+
+#typenote {
+  display: none;
+}
+
+#searchsong {
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+}
+
 body {
   padding:10px;
+  background-image: url(old_wall.png);
+  font-family: 'Droid Sans', 'Helvetica', sans-serif;
 }
 .img {
   margin-bottom:20px;

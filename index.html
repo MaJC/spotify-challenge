@@ -2,32 +2,109 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery.min.js"></script>
+
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
 <script src="app.js"></script>
-<link href="app.css" type="text/css" />
+<link href="app.css" type="text/css" rel="stylesheet"/>
   <meta charset="utf-8">
-  <title>JS Bin</title>
+  <title>Spotify Search Plus</title>
 </head>
 <body>
+  <h1> Spotify Search Plus</h1>
+  <p id="intro">Welcome to the Spotify Search Plus. Here you can learn more about artists, albums, and tracks. To get started, select what you want to search for.</p>
+  
   <div ng-app="myApp" ng-controller="myCtrl">
-  <form name="songForm">
-    <div class="form-group">
-      <label>Spotify search:</label>
-      <input name="search" ng-minlength=3 placeholder="Enter your search.." ng-model="track" class="form-control" required></input>
-    <p class="help-block" ng-show="songForm.search.$error.minlength">Enter 3+ characters</p>
-    </div>
-    <div class="form-group">
-      <button ng-disabled="songForm.search.$invalid" class="btn btn-primary" ng-click="getSongs()" type="submit">Submit</button>
-    </div>
-  </form>
-  <div>
-      <div class="container-fixed">
-        <p ng-show="tracks.length>0" class="help-block">Click to sample</p>
-        <div ng-class="track.preview_url == currentSong ? 'playing' : ''"  ng-repeat="track in tracks" class="col-xs-4 img"><img ng-click="play(track.preview_url)" title="{{track.name}}" src="{{track.album.images[1].url}}"></img></div>
-    </div>
-    </div>
+
+    <form name="typeForm">
+      <div id="searchchoice">
+        <label>I'm looking for a(n) </label>
+        <div id="dropdowndiv">
+          <select name="types" id="typemenu" ng-model="feed.searchtype" ng-options="searchtype.name for searchtype in searchtypes" ng-change="typechange()">
+            <option value="" disabled >Select a type</option>
+            
+          </select>
+        </div>
+      </div> 
+    </form>
+    <br>
+    
+  <div id="searchsong">
+    <form name="songForm">
+      <div class="form-group">
+        <label>Search on Spotify for {{feed.searchtype.value}}</label>
+        <input name="search" ng-minlength=3 placeholder="Enter your search.." ng-model="track" class="form-control" required></input>
+      <p class="help-block" ng-show="songForm.search.$error.minlength">Enter 3+ characters</p>
+      </div>
+      <div class="form-group">
+        <button ng-disabled="songForm.search.$invalid" class="btn btn-primary" ng-click="getSearch()" type="submit">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  
+    <div class="container-fixed" >
+
+           
+      <p ng-show = "testtype == 'album'">Click on the album picture to see the album's track list.</p>
+
+      <div class="col-md-6">
+      <div ng-repeat="result in chosentype|limitTo:6"  id="albumlist" ng-show ="testtype == 'album'" class="col-xs-6 img resultbox" ng-class="result.id == currentId ? 'listed' : ''">
+        <img src="{{result.images[1].url}}" ng-click="showalbumtracks(result.id)" ></img>
+          <p>{{result.name}} </p>
+       
+      </div>
+      </div>
+
+      
+      <div class="col-md-6" id="tracklists" ng-show="tracklistshow">
+        <p>Album's track(s) with the artist(s) followed. <br>
+          Click on a track name to hear sample.
+        </p>
+        <ol>
+          <li ng-repeat="x in albumtracks" ng-click="play(x.preview_url)" ng-class="x.preview_url == currentSong ? 'playing' : ''"  >
+            <span class="listtracks">{{x.name}}</span> <span class="artistname">- {{x.artists[0].name}}</span>
+          </li>
+        </ol>
+      </div>
+      
+
+      <p ng-show = "testtype == 'artist'">*Only artists with pictures will be listed.</p>
+
+      <div  class="col-md-6">   
+        <div ng-repeat="result in chosentype"  id="artistlist" ng-show ="testtype == 'artist'" class="col-xs-6 img resultbox" ng-if='result.images[1].url.length>0 ' ng-class="result.id == artistId ? 'listed' : ''">
+         
+          <img src="{{result.images[1].url}}" ng-click="showtoptracks(result.id)" title="Click to show artist's top tracks"></img>
+            <p><span class="resultinfo">{{result.name}}</span></p>    
+            <p><span class="resultinfo">{{result.followers.total}}</span> followers on Spotify</p> 
+        </div>
+      </div>
+
+      
+      <div class="col-md-6" id="toptracklist" ng-show="toplistshow">
+        <p>Artist's top tracks. Click on track name to play sample.</p>
+        <ol>
+
+          <li ng-repeat="x in toptracks" ng-click="play(x.preview_url)" ng-class="x.preview_url == currentSong ? 'playing' : ''" title="Click to play preview">
+            <span class="listtracks">{{x.name}}  <span class="popularityinfo" ng-class="x.popularity >= 70 ? 'hotpopular' : ''">[Popularity: {{x.popularity}}]</span></span> <br>
+            <span class="albumname">Album: {{x.album.name}}</span>
+          </li>
+        </ol>      
+      </div>
+  
+
+   
+      <div ng-class="result.preview_url == currentSong ? 'playing' : ''" ng-repeat="result in chosentype" class="col-xs-4 img resultbox" id="trackslist" ng-show ="testtype == 'track'">
+        <p><span class="resultinfo">Track Name: </span>{{result.name}} <br> <span class="popularityinfo" ng-class="result.popularity > 70 ? 'hotpopular' : ''">[Popularity: {{result.popularity}}]</span></p>
+        <p><span class="resultinfo">Artist: </span>{{result.artists[0].name}}</p>
+        <p><span class="resultinfo">Album: </span>{{result.album.name}}</p>
+        <img ng-click="play(result.preview_url)" src="{{result.album.images[0].url}}" title="Click to play preview"></img>
+      </div>
+
+
+     </div> 
   </div>
   </div>
 </body>
